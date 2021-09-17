@@ -6,6 +6,7 @@ import axios from 'axios';
 import {Credentials} from './Credentials'
 import { useState } from "react";
 import Listbox from './Listbox';
+import ListboxRecs from './ListboxRecs'
 import Slider from '@material-ui/core/Slider';
 import { Container } from '@mui/material';
 import NavBar from "./NavBar"
@@ -30,6 +31,7 @@ function App() {
   const [genres, setGenres] = useState({selectedGenre: '', listOfGenresFromAPI: []});
   const [playlist, setPlaylist] = useState({selectedPlaylist: '', listOfPlaylistFromAPI: []});
   const [tracks, setTracks] = useState({selectedTrack: '', listOfTracksFromAPI: []});
+  const [recommendations, setRecommendations] = useState({selectedRecommendations: '', listOfRecommendationsFromAPI: []});
   const [trackDetail, setTrackDetail] = useState(null);
 
   useEffect(() => {
@@ -54,14 +56,27 @@ function App() {
           selectedGenre: genres.selectedGenre,
           listOfGenresFromAPI: genreResponse.data.categories.items
         })
-      });
+      })
+      axios(`https://api.spotify.com/v1/recommendations?market=US&seed_artists=4NHQUGzhtTLFvgF5SZesLK&seed_genres=country&seed_tracks=0c6xIDDpzE81m2q797ordA&min_energy=0.4&min_popularity=50`, {
+      method: 'GET',
+      headers: {
+        'Authorization' : 'Bearer ' + tokenResponse.data.access_token
+      }
+    })
+    .then (recommendationsResponse => {
+        setRecommendations({
+          selectedRecommendations: recommendations.selectedRecommendations,
+          listOfRecommendationsFromAPI: recommendationsResponse.data.tracks
+
+        })
+      })
       
     });
 
   }, [genres.selectedGenre, spotify.ClientId, spotify.ClientSecret]);
   
 
-
+  console.log(recommendations.listOfRecommendationsFromAPI);
 
   const genreChanged = val => {
     setGenres({
@@ -91,6 +106,7 @@ function App() {
     });
   }
 
+
   const buttonClicked = e => {
     e.preventDefault();
 
@@ -107,7 +123,32 @@ function App() {
       })
     });
   }
+/*
+  const danceabilityChanged = val => {
 
+    setDanceability({
+      selectedDanceability: val,
+      listOfTracksFromAPI: danceabilityResonse.data.items
+    })
+
+    axios(`https://api.spotify.com/v1/recommendations`, {
+      method: 'GET',
+      headers: {
+        'Authorization' : 'Bearer ' + token
+      },
+      body: {
+        'target_danceability': danceability
+      },
+    })
+    .then(danceabilityResonse => {
+      setDanceability({
+        selectedDanceability: tracks.selectedDanceability,
+        listOfTracksFromAPI: danceabilityResonse.data.items
+      })
+    });
+    console.log(val);
+  }
+*/
   const listboxClicked = val => {
 /*
     const currentTracks = [...tracks.listOfTracksFromAPI];
@@ -134,6 +175,7 @@ function App() {
           <Dropdown label="Genre :&nbsp;" options={genres.listOfGenresFromAPI} selectedValue={genres.selectedGenre} changed={genreChanged} />
           <br></br>
           <Dropdown label="Playlist :&nbsp;" options={playlist.listOfPlaylistFromAPI} selectedValue={playlist.selectedPlaylist} changed={playlistChanged} />
+          
           <br></br>
           <div id="centerItem" className="col-sm-6 row form-group px-0">
             <button type='submit' className="btn btn-success col-sm-12">
@@ -148,12 +190,13 @@ function App() {
 
           <div class="slidecontainer">
 
-          <Typography align='center' variant="h4" gutterBottom component="div">
+          <Typography align='center' variant="h4" gutterBottom component="div" >
                     Danceability
                 </Typography> 
 
             <Slider
               className="sliderDet"
+              //onChangeCommitted={danceabilityChanged}
               defaultValue={0.5}
               aria-labelledby="discrete-slider-always"
               step={0.1}
@@ -161,6 +204,7 @@ function App() {
               color="primary"
               valueLabelDisplay="on"
             />
+
 
 <br></br>
 <br></br>
@@ -230,7 +274,19 @@ function App() {
               color="primary"
               valueLabelDisplay="on"
             />
+
+<br></br>
+<br></br>
+<br></br>
+
           </div>
+
+          <div className="row">
+            <ListboxRecs items={recommendations.listOfRecommendationsFromAPI} clicked={listboxClicked} />
+          </div>
+          <br></br>
+<br></br>
+<br></br>
             
                  
       </form>
