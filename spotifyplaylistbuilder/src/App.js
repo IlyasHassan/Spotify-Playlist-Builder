@@ -90,7 +90,7 @@ function App() {
   const buttonClicked = e => {
     e.preventDefault();
 
-    axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?limit=50`, {
+    axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?`, {
       method: 'GET',
       headers: {
         'Authorization' : 'Bearer ' + token
@@ -105,16 +105,18 @@ function App() {
   }
 
   const listboxClicked = val => {
-
+/*
     const currentTracks = [...tracks.listOfTracksFromAPI];
 
     const trackInfo = currentTracks.filter(t => t.track.id === val);
 
     setTrackDetail(trackInfo[0].track);
-
+*/
 
 
   }
+
+
 
 
   return (
