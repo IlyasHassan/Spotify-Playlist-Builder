@@ -1,22 +1,21 @@
 import React from 'react';
 
+const Dropdown = props => {    
 
-const Dropdown = () => {
+    const dropdownChanged = e => {
+        props.changed(e.target.value);
 
+    }    
 
-    const data = [
-        {value: 1, name: 'A'},
-        {value: 2, name: 'B'},
-        {value: 3, name: 'C'},
-    ]
-
-return (
-    <div>
-        <select>
-            {data.map((item, idx) => <option key={idx} value={item.value}> {item.name}</option>)}
-        </select>
-    </div>
-)
+    return (
+        <div className="col-sm-6 form-group row px-0">     
+            <label className="form-label col-sm-2">{props.label}</label>       
+            <select value={props.selectedValue} onChange={dropdownChanged} className="form-control form-control-sm col-sm-10">
+                <option key={0}>Select...</option>
+                {props.options.map((item, idx) => <option key={idx + 1} value={item.id}>{item.name}</option>)}
+            </select>            
+        </div>
+    );
 }
 
 export default Dropdown;
