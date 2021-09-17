@@ -6,6 +6,10 @@ import axios from 'axios';
 import {Credentials} from './Credentials'
 import { useState } from "react";
 import Listbox from './Listbox';
+import Slider from '@material-ui/core/Slider';
+import { Container } from '@mui/material';
+import NavBar from "./NavBar"
+import { Typography } from '@mui/material';
 
 //get list of songs from a playlist (50 songs), filter using the user's requirements, 
 //then output the first 10 songs, allow refresh which takes the next ten
@@ -121,23 +125,118 @@ function App() {
 
   return (
 <div className="container">
-      <form onSubmit={buttonClicked}>        
-          <Dropdown label="Genre :" options={genres.listOfGenresFromAPI} selectedValue={genres.selectedGenre} changed={genreChanged} />
-          <Dropdown label="Playlist :" options={playlist.listOfPlaylistFromAPI} selectedValue={playlist.selectedPlaylist} changed={playlistChanged} />
-          <div className="col-sm-6 row form-group px-0">
+    <NavBar></NavBar>
+    <Container className= "containGen" maxWidth="md">
+
+
+      <form onSubmit={buttonClicked}>   
+      <br></br>     
+          <Dropdown label="Genre :&nbsp;" options={genres.listOfGenresFromAPI} selectedValue={genres.selectedGenre} changed={genreChanged} />
+          <br></br>
+          <Dropdown label="Playlist :&nbsp;" options={playlist.listOfPlaylistFromAPI} selectedValue={playlist.selectedPlaylist} changed={playlistChanged} />
+          <br></br>
+          <div id="centerItem" className="col-sm-6 row form-group px-0">
             <button type='submit' className="btn btn-success col-sm-12">
               Search
             </button>
           </div>
+          <br></br>
           <div className="row">
             <Listbox items={tracks.listOfTracksFromAPI} clicked={listboxClicked} />
           </div>
-          <div className="col-sm-6 row form-group px-0">
-            
-          </div>        
-      </form>
-    </div>
+          <br></br>
 
+          <div class="slidecontainer">
+
+          <Typography align='center' variant="h4" gutterBottom component="div">
+                    Danceability
+                </Typography> 
+
+            <Slider
+              className="sliderDet"
+              defaultValue={0.5}
+              aria-labelledby="discrete-slider-always"
+              step={0.1}
+              max={1}
+              color="primary"
+              valueLabelDisplay="on"
+            />
+
+<br></br>
+<br></br>
+<br></br>
+
+            <Typography align='center' variant="h4" gutterBottom component="div">
+                    Stat
+                </Typography> 
+
+            <Slider
+              className="sliderDet"
+              defaultValue={80}
+              aria-labelledby="discrete-slider-always"
+              step={10}
+              color="primary"
+              valueLabelDisplay="on"
+            />
+
+<br></br>
+<br></br>
+<br></br>
+
+            <Typography align='center' variant="h4" gutterBottom component="div">
+                    Stat
+                </Typography> 
+
+            <Slider
+              className="sliderDet"
+              defaultValue={80}
+              aria-labelledby="discrete-slider-always"
+              step={10}
+              color="primary"
+              valueLabelDisplay="on"
+            />
+
+<br></br>
+<br></br>
+<br></br>
+
+            <Typography align='center' variant="h4" gutterBottom component="div">
+                    Stat
+                </Typography> 
+
+
+            <Slider
+              className="sliderDet"
+              defaultValue={80}
+              aria-labelledby="discrete-slider-always"
+              step={10}
+              color="primary"
+              valueLabelDisplay="on"
+            />
+
+<br></br>
+<br></br>
+<br></br>
+
+            <Typography align='center' variant="h4" gutterBottom component="div">
+                    Stat
+                </Typography>  
+
+            <Slider
+              className="sliderDet"
+              defaultValue={80}
+              aria-labelledby="discrete-slider-always"
+              step={10}
+              color="primary"
+              valueLabelDisplay="on"
+            />
+          </div>
+            
+                 
+      </form>
+    
+    </Container>
+    </div>
   );
 }
 
