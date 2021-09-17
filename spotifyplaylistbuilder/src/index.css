@@ -77,3 +77,9 @@ code {
   align-self: center;
 
 }
+
+.containGen{
+  border-style: solid;
+  border-radius: 25px;
+  border-color: rgb(46, 59, 85);;
+}

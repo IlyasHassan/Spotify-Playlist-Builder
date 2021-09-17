@@ -2,6 +2,7 @@ import React, {Component, useEffect} from "react";
 import Navbar from "./NavBarApp"
 import {BrowserRouter} from "react-router-dom"
 import Dropdown from "./Dropdown"
+import DropdownSeedGenres from "./DropdownSeedGenres"
 import axios from 'axios';
 import {Credentials} from './Credentials'
 import { useState } from "react";
@@ -31,7 +32,10 @@ function App() {
   const [genres, setGenres] = useState({selectedGenre: '', listOfGenresFromAPI: []});
   const [playlist, setPlaylist] = useState({selectedPlaylist: '', listOfPlaylistFromAPI: []});
   const [tracks, setTracks] = useState({selectedTrack: '', listOfTracksFromAPI: []});
+  const [seedgenres, setSeedGenres] = useState({selectedSeedGenre: '', listOfSeedGenresFromAPI: []});
   const [recommendations, setRecommendations] = useState({selectedRecommendations: '', listOfRecommendationsFromAPI: []});
+  const [minenergy, setMinEnergy] = useState({selectedMinEnergy: 0, newMinEnergy: 0});
+  const [minpopularity, setMinPopularity] = useState({selectedMinPopularity: 0, newMinPopularity: 0});
   const [trackDetail, setTrackDetail] = useState(null);
 
   useEffect(() => {
@@ -47,7 +51,7 @@ function App() {
     .then(tokenResponse => {      
       setToken(tokenResponse.data.access_token);
 
-      axios('	https://api.spotify.com/v1/browse/categories?country=US', {
+      axios('https://api.spotify.com/v1/browse/categories?country=US', {
         method: 'GET',
         headers: { 'Authorization' : 'Bearer ' + tokenResponse.data.access_token}
       })
@@ -57,17 +61,15 @@ function App() {
           listOfGenresFromAPI: genreResponse.data.categories.items
         })
       })
-      axios(`https://api.spotify.com/v1/recommendations?market=US&seed_artists=4NHQUGzhtTLFvgF5SZesLK&seed_genres=country&seed_tracks=0c6xIDDpzE81m2q797ordA&min_energy=0.4&min_popularity=50`, {
-      method: 'GET',
-      headers: {
-        'Authorization' : 'Bearer ' + tokenResponse.data.access_token
-      }
-    })
-    .then (recommendationsResponse => {
-        setRecommendations({
-          selectedRecommendations: recommendations.selectedRecommendations,
-          listOfRecommendationsFromAPI: recommendationsResponse.data.tracks
 
+      axios('https://api.spotify.com/v1/recommendations/available-genre-seeds?country=US', {
+        method: 'GET',
+        headers: { 'Authorization' : 'Bearer ' + tokenResponse.data.access_token}
+      })
+      .then (seedgenreResponse => {        
+        setSeedGenres({
+          selectedSeedGenre: seedgenres.selectedSeedGenre,
+          listOfSeedGenresFromAPI: seedgenreResponse.data.genres
         })
       })
       
@@ -75,8 +77,6 @@ function App() {
 
   }, [genres.selectedGenre, spotify.ClientId, spotify.ClientSecret]);
   
-
-  console.log(recommendations.listOfRecommendationsFromAPI);
 
   const genreChanged = val => {
     setGenres({
@@ -93,6 +93,15 @@ function App() {
         selectedPlaylist: playlist.selectedPlaylist,
         listOfPlaylistFromAPI: playlistResponse.data.playlists.items
       })
+    });
+
+    console.log(val);
+  }
+
+  const seedGenreChanged = val => {
+    setSeedGenres({
+      selectedSeedGenre: val, 
+      listOfSeedGenresFromAPI: seedgenres.listOfSeedGenresFromAPI
     });
 
     console.log(val);
@@ -122,6 +131,44 @@ function App() {
         listOfTracksFromAPI: tracksResponse.data.items
       })
     });
+  }
+
+  const handleChange = (event, newValue) => {
+    event.preventDefault();
+
+    setMinEnergy({
+      selectedMinEnergy: minenergy.selectedMinEnergy,
+      newMinEnergy: newValue
+    })
+
+  }
+
+  const handleChange2 = (event, newValue) => {
+    event.preventDefault();
+
+    setMinPopularity({
+      selectedMinPopularity: minpopularity.selectedMinPopularity,
+      newMinPopularity: newValue
+    })
+
+  }
+
+  const buttonTwoClicked = e => {
+    e.preventDefault();
+
+    axios(`https://api.spotify.com/v1/recommendations?market=US&target_danceability=0.5&target_tempo=100&seed_genres=${seedgenres.selectedSeedGenre}&target_acousticness=0.5&target_energy=${minenergy.newMinEnergy}&target_popularity=${minpopularity.newMinPopularity}`, {
+    method: 'GET',
+      headers: {
+        'Authorization' : 'Bearer ' + token
+      }
+    })
+    .then (recommendationsResponse => {
+        setRecommendations({
+          selectedRecommendations: recommendations.selectedRecommendations,
+          listOfRecommendationsFromAPI: recommendationsResponse.data.tracks
+
+        })
+      })
   }
 /*
   const danceabilityChanged = val => {
@@ -168,6 +215,12 @@ function App() {
 <div className="container">
     <NavBar></NavBar>
     <Container className= "containGen" maxWidth="md">
+    <br></br>
+<br></br>
+<br></br>
+    <Typography align='center' variant="h2" gutterBottom component="div" >
+                    Tracks From Curated Spotify Playlists
+                </Typography> 
 
 
       <form onSubmit={buttonClicked}>   
@@ -186,18 +239,33 @@ function App() {
           <div className="row">
             <Listbox items={tracks.listOfTracksFromAPI} clicked={listboxClicked} />
           </div>
+          </form>
           <br></br>
-
+          <br></br>
+<br></br>
+<br></br>
           <div class="slidecontainer">
+            <form onSubmit={buttonTwoClicked}>
 
+          <Typography align='center' variant="h2" gutterBottom component="div" >
+                    Recommended Tracks Based on Your Favorite Genres and Other Stats
+                </Typography> 
+                <br></br>
+<br></br>
+<br></br>
+
+<DropdownSeedGenres label="Genre :&nbsp;" options={seedgenres.listOfSeedGenresFromAPI} selectedValue={seedgenres.selectedSeedGenre} changed={seedGenreChanged} />
+          <br></br>
+          <br></br>
+          <br></br>
           <Typography align='center' variant="h4" gutterBottom component="div" >
-                    Danceability
+                    Energy
                 </Typography> 
 
             <Slider
               className="sliderDet"
-              //onChangeCommitted={danceabilityChanged}
-              defaultValue={0.5}
+              onChange={handleChange}
+              defaultValue={0}
               aria-labelledby="discrete-slider-always"
               step={0.1}
               max={1}
@@ -211,14 +279,16 @@ function App() {
 <br></br>
 
             <Typography align='center' variant="h4" gutterBottom component="div">
-                    Stat
+                    Popularity
                 </Typography> 
 
             <Slider
               className="sliderDet"
-              defaultValue={80}
+              onChange={handleChange2}
+              defaultValue={0}
               aria-labelledby="discrete-slider-always"
               step={10}
+              max={100}
               color="primary"
               valueLabelDisplay="on"
             />
@@ -228,14 +298,16 @@ function App() {
 <br></br>
 
             <Typography align='center' variant="h4" gutterBottom component="div">
-                    Stat
+                    Acousticness
                 </Typography> 
 
             <Slider
               className="sliderDet"
-              defaultValue={80}
+              onChange={handleChange3}
+              defaultValue={0}
               aria-labelledby="discrete-slider-always"
-              step={10}
+              step={0.1}
+              max={1}
               color="primary"
               valueLabelDisplay="on"
             />
@@ -245,15 +317,17 @@ function App() {
 <br></br>
 
             <Typography align='center' variant="h4" gutterBottom component="div">
-                    Stat
+                    Danceability
                 </Typography> 
 
 
             <Slider
               className="sliderDet"
-              defaultValue={80}
+              onChange={handleChange4}
+              defaultValue={0}
               aria-labelledby="discrete-slider-always"
-              step={10}
+              step={0.1}
+              max={1}
               color="primary"
               valueLabelDisplay="on"
             />
@@ -263,14 +337,17 @@ function App() {
 <br></br>
 
             <Typography align='center' variant="h4" gutterBottom component="div">
-                    Stat
+                    Tempo
                 </Typography>  
 
             <Slider
               className="sliderDet"
-              defaultValue={80}
+              onChange={handleChange5}
+              defaultValue={50}
               aria-labelledby="discrete-slider-always"
               step={10}
+              max={200}
+              min={50}
               color="primary"
               valueLabelDisplay="on"
             />
@@ -278,7 +355,10 @@ function App() {
 <br></br>
 <br></br>
 <br></br>
-
+<button type='submit' className="btn btn-success col-sm-12">
+              Generate
+            </button>
+          </form>
           </div>
 
           <div className="row">
@@ -289,7 +369,7 @@ function App() {
 <br></br>
             
                  
-      </form>
+      
     
     </Container>
     </div>
