@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import { Select, MenuItem } from '@mui/material';
 
 const DropdownSeedGenres = props => {    
 
@@ -28,13 +29,13 @@ const DropdownSeedGenres = props => {
 
             <br></br>
 
-            <select value={props.selectedValue} onChange={dropdownChanged} >
+            <Select value={props.selectedValue} onChange={dropdownChanged} >
 
                 <option key={0}>Select...</option>
 
-                {props.options.map((item, idx) => <option key={idx + 1} value={item}>{item}</option>)}
+                {props.options.map((item, idx) => <MenuItem key={idx + 1} value={item}>{item}</MenuItem>)}
 
-            </select> 
+            </Select> 
             </div>           
         </div>
     );

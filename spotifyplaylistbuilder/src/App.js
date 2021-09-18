@@ -13,6 +13,9 @@ import { Container } from '@mui/material';
 import NavBar from "./NavBar"
 import { Typography, Grid } from '@mui/material';
 import Detail2 from "./Detail2"
+import Detail3 from "./Detail3"
+import Button from '@mui/material/Button';
+
 //get list of songs from a playlist (50 songs), filter using the user's requirements, 
 //then output the first 10 songs, allow refresh which takes the next ten
 
@@ -184,7 +187,7 @@ function App() {
   const buttonTwoClicked = e => {
     e.preventDefault();
 
-    axios(`https://api.spotify.com/v1/recommendations?market=US&target_danceability=${danceable.newDanceable}&target_tempo=${tempo.newTempo}&seed_genres=${seedgenres.selectedSeedGenre}&target_acousticness=${acoustic.newAcoustic}&target_energy=${minenergy.newMinEnergy}&target_popularity=${minpopularity.newMinPopularity}`, {
+    axios(`https://api.spotify.com/v1/recommendations?market=US&limit=10&target_danceability=${danceable.newDanceable}&target_tempo=${tempo.newTempo}&seed_genres=${seedgenres.selectedSeedGenre}&target_acousticness=${acoustic.newAcoustic}&target_energy=${minenergy.newMinEnergy}&target_popularity=${minpopularity.newMinPopularity}`, {
     method: 'GET',
       headers: {
         'Authorization' : 'Bearer ' + token
@@ -234,12 +237,13 @@ function App() {
           
           <br></br>
           <div id="centerItem" className="col-sm-6 row form-group px-0">
-            <button type='submit' className="btn btn-success col-sm-12">
+            <Button variant="contained" type='submit'>
               Search
-            </button>
-            <button  type='button' onClick={refreshTracks}>
+            </Button>
+
+            <Button  variant="contained" type='button' onClick={refreshTracks}>
               Refresh
-            </button>
+            </Button>
           </div>
           <br></br>
           <Grid class="gridxs"container spacing={2} columns={2}>
@@ -367,18 +371,24 @@ function App() {
 <br></br>
 <br></br>
 <br></br>
-<button type='submit' className="btn btn-success col-sm-12">
+<div id="centerItem">
+<Button  variant="contained" type='submit'>
               Generate
-            </button>
+            </Button>
+            </div>
           </form>
           <br></br>
           <br></br>
           <br></br>
           </div>
-
-          <div className="row">
+          <Grid class="gridxs"container spacing={2} columns={2}>
+            <Grid class="gridxs1"item lg>
             <ListboxRecs items={recommendations.listOfRecommendationsFromAPI}  />
-          </div>
+            </Grid>
+            <Grid class="gridxs1"item lg>
+              <Detail3 items={recommendations.listOfRecommendationsFromAPI}></Detail3>
+            </Grid>
+          </Grid>
           <br></br>
 <br></br>
 <br></br>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography } from '@mui/material';
+import { Select, MenuItem } from '@mui/material';
 
 const Dropdown = props => {    
 
@@ -28,13 +29,14 @@ const Dropdown = props => {
 
             <br></br>
 
-            <select value={props.selectedValue} onChange={dropdownChanged} >
+            <Select value={props.selectedValue} onChange={dropdownChanged} >
 
-                <option key={0}>Select...</option>
+            <option key={0}>Select...</option>
 
-                {props.options.map((item, idx) => <option key={idx + 1} value={item.id}>{item.name}</option>)}
+                
+                {props.options.map((item, idx) => <MenuItem key={idx + 1} value={item.id}>{item.name}</MenuItem>)}
 
-            </select> 
+            </Select> 
             </div>           
         </div>
     );

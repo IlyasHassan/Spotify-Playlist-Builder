@@ -1,31 +1,49 @@
 import React from 'react';
+import { Typography } from '@mui/material';
 
-const Listbox = props => {
+const ListboxRecs = props => {
 
 
-
-    //const finalArray = props.items.sort(() => Math.random() - Math.random()).slice(0, 10);
 
 
     return (
-        <div >
-            <div class="btn-group">
+
+            <div class="btn-group" >
                 
                 {
                     props.items.map((item, idx) => 
                     <button key={idx}
                         className = "track-btn"
                         
-                            >
+                        >
+                            <Typography variant="h5" gutterBottom component="div">
+                            <b>{item.artists[0].name}</b>
+                </Typography> 
+                            
+ 
 
+                            
+                            <Typography variant="h5" gutterBottom component="div">
                             {item.name}
-                    </button>)
+                </Typography> 
+                            <br></br>
+                            
+                    </button>
+                    
+                    )
+
+                    
                 }
+                
             </div>
-        </div>
+            
+
+        
+                
+
         
 
     );
 }
 
-export default Listbox;
+export default ListboxRecs;
