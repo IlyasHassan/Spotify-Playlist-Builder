@@ -7,7 +7,7 @@ const Listbox = props => {
 
 
     return (
-        <div >
+
             <div class="btn-group" >
                 
                 {
@@ -40,7 +40,7 @@ const Listbox = props => {
 
         
                 
-        </div>
+
         
 
     );

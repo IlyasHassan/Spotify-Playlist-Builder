@@ -22,11 +22,6 @@ function App() {
 
   console.log('RENDERING APP.JS');
 
-  const data = [
-    {value: 1, name: 'A'},
-    {value: 2, name: 'B'},
-    {value: 3, name: 'C'},
-  ]; 
 
   const [token, setToken] = useState('');  
   const [genres, setGenres] = useState({selectedGenre: '', listOfGenresFromAPI: []});
@@ -40,7 +35,6 @@ function App() {
   const [danceable, setDanceable] = useState({selectedDanceable: 0, newDanceable: 0});
   const [tempo, setTempo] = useState({selectedTempo: 0, newTempo: 0});
 
-  const [trackDetail, setTrackDetail] = useState(null);
 
   useEffect(() => {
 
@@ -218,47 +212,6 @@ function App() {
 
 
   }
-/*
-  const danceabilityChanged = val => {
-
-    setDanceability({
-      selectedDanceability: val,
-      listOfTracksFromAPI: danceabilityResonse.data.items
-    })
-
-    axios(`https://api.spotify.com/v1/recommendations`, {
-      method: 'GET',
-      headers: {
-        'Authorization' : 'Bearer ' + token
-      },
-      body: {
-        'target_danceability': danceability
-      },
-    })
-    .then(danceabilityResonse => {
-      setDanceability({
-        selectedDanceability: tracks.selectedDanceability,
-        listOfTracksFromAPI: danceabilityResonse.data.items
-      })
-    });
-    console.log(val);
-  }
-*/
-
-  const listboxClicked = val => {
-
-    const currentTracks = [...tracks.listOfTracksFromAPI];
-
-    const trackInfo = currentTracks.filter(t => t.track.id === val);
-
-    setTrackDetail(trackInfo[0].track);
-
-
-
-  }
-
-
-
 
   return (
 <div className="container">
@@ -290,10 +243,10 @@ function App() {
           </div>
           <br></br>
           <Grid class="gridxs"container spacing={2} columns={2}>
-            <Grid class="gridxs"item lg>
-              <Listbox items={tracks.listOfTracksFromAPI} clicked={listboxClicked} />
+            <Grid class="gridxs1"item lg>
+              <Listbox items={tracks.listOfTracksFromAPI} />
             </Grid>
-            <Grid class="gridxs"item lg>
+            <Grid class="gridxs1"item lg>
               <Detail2 items={tracks.listOfTracksFromAPI}></Detail2>
             </Grid>
           </Grid>
@@ -424,7 +377,7 @@ function App() {
           </div>
 
           <div className="row">
-            <ListboxRecs items={recommendations.listOfRecommendationsFromAPI} clicked={listboxClicked} />
+            <ListboxRecs items={recommendations.listOfRecommendationsFromAPI}  />
           </div>
           <br></br>
 <br></br>

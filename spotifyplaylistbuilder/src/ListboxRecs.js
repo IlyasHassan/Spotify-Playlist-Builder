@@ -2,10 +2,6 @@ import React from 'react';
 
 const Listbox = props => {
 
-    const clicked = e => {
-        e.preventDefault();
-        //props.clicked(e.target.artists.id);
-    }
 
 
     //const finalArray = props.items.sort(() => Math.random() - Math.random()).slice(0, 10);
@@ -18,7 +14,6 @@ const Listbox = props => {
                 {
                     props.items.map((item, idx) => 
                     <button key={idx}
-                        onClick={clicked}
                         className = "track-btn"
                         
                             >
