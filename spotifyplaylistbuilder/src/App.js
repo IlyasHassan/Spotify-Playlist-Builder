@@ -11,8 +11,8 @@ import ListboxRecs from './ListboxRecs'
 import Slider from '@material-ui/core/Slider';
 import { Container } from '@mui/material';
 import NavBar from "./NavBar"
-import { Typography } from '@mui/material';
-
+import { Typography, Grid } from '@mui/material';
+import Detail2 from "./Detail2"
 //get list of songs from a playlist (50 songs), filter using the user's requirements, 
 //then output the first 10 songs, allow refresh which takes the next ten
 
@@ -88,7 +88,7 @@ function App() {
       listOfGenresFromAPI: genres.listOfGenresFromAPI
     });
 
-    axios(`https://api.spotify.com/v1/browse/categories/${val}/playlists?limit=10`, {
+    axios(`https://api.spotify.com/v1/browse/categories/${val}/playlists?market=US?limit=10`, {
       method: 'GET',
       headers: { 'Authorization' : 'Bearer ' + token}
     })
@@ -123,7 +123,7 @@ function App() {
   const buttonClicked = e => {
     e.preventDefault();
 
-    axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?`, {
+    axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?market=US&limit=10`, {
       method: 'GET',
       headers: {
         'Authorization' : 'Bearer ' + token
@@ -204,6 +204,20 @@ function App() {
         })
       })
   }
+
+  const refreshTracks = () => {
+
+    const finalArray = tracks.listOfTracksFromAPI.sort(() => Math.random() - Math.random()).slice(0, 10);
+
+
+    setTracks({
+      selectedTrack: tracks.selectedTrack,
+      listOfTracksFromAPI: finalArray
+    }) 
+    console.log(finalArray)
+
+
+  }
 /*
   const danceabilityChanged = val => {
 
@@ -230,14 +244,15 @@ function App() {
     console.log(val);
   }
 */
+
   const listboxClicked = val => {
-/*
+
     const currentTracks = [...tracks.listOfTracksFromAPI];
 
     const trackInfo = currentTracks.filter(t => t.track.id === val);
 
     setTrackDetail(trackInfo[0].track);
-*/
+
 
 
   }
@@ -248,6 +263,7 @@ function App() {
   return (
 <div className="container">
     <NavBar></NavBar>
+    <br></br>
     <Container className= "containGen" maxWidth="md">
     <br></br>
 <br></br>
@@ -268,11 +284,20 @@ function App() {
             <button type='submit' className="btn btn-success col-sm-12">
               Search
             </button>
+            <button  type='button' onClick={refreshTracks}>
+              Refresh
+            </button>
           </div>
           <br></br>
-          <div className="row">
-            <Listbox items={tracks.listOfTracksFromAPI} clicked={listboxClicked} />
-          </div>
+          <Grid class="gridxs"container spacing={2} columns={2}>
+            <Grid class="gridxs"item lg>
+              <Listbox items={tracks.listOfTracksFromAPI} clicked={listboxClicked} />
+            </Grid>
+            <Grid class="gridxs"item lg>
+              <Detail2 items={tracks.listOfTracksFromAPI}></Detail2>
+            </Grid>
+          </Grid>
+      
           </form>
           <br></br>
           <br></br>
@@ -393,6 +418,9 @@ function App() {
               Generate
             </button>
           </form>
+          <br></br>
+          <br></br>
+          <br></br>
           </div>
 
           <div className="row">

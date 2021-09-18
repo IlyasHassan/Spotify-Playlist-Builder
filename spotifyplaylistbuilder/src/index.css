@@ -63,6 +63,10 @@ code {
 
   align-items: center;
   align-self: center;
+  justify-content: center;
+  justify-self: center;
+  align-items: center;
+  align-self: center;
 
 }
 
@@ -82,4 +86,104 @@ code {
   border-style: solid;
   border-radius: 25px;
   border-color: rgb(46, 59, 85);;
+}
+
+.btn-group button {
+  
+
+  
+
+  color: rgb(0, 0, 0); /* White text */
+  cursor:default; /* Pointer/hand icon */
+
+ 
+  margin: 0px;
+
+
+
+
+  display: grid; /* Make the buttons appear below each other */
+  justify-content: center;
+  justify-self: center;
+  justify-items: center;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+}
+
+.img-group{
+  
+
+  color: white; 
+
+  cursor: pointer;
+
+
+
+
+
+  display:grid; 
+  justify-content: center;
+  justify-self: center;
+  justify-items: center;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+
+}
+
+
+
+
+
+.track-btn{
+  background-color: transparent;
+  border-style: hidden;
+  justify-content: center;
+  cursor: pointer;
+  width: 200px; /* Set a width if needed */
+  height: 200px;
+
+
+
+  justify-content: center;
+  justify-self: center;
+  justify-items: center;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+
+}
+
+
+
+
+img {
+  width: 200px;
+  height: 200px;
+  display: block;
+  border-style: solid;
+
+  border-color: black;
+
+  justify-content: center;
+  justify-self: center;
+  justify-items: center;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+}
+
+
+
+
+.gridxs{
+
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  justify-self: center;
 }
