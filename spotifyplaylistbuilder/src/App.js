@@ -36,6 +36,10 @@ function App() {
   const [recommendations, setRecommendations] = useState({selectedRecommendations: '', listOfRecommendationsFromAPI: []});
   const [minenergy, setMinEnergy] = useState({selectedMinEnergy: 0, newMinEnergy: 0});
   const [minpopularity, setMinPopularity] = useState({selectedMinPopularity: 0, newMinPopularity: 0});
+  const [acoustic, setAcoustic] = useState({selectedAcoustic: 0, newAcoustic: 0});
+  const [danceable, setDanceable] = useState({selectedDanceable: 0, newDanceable: 0});
+  const [tempo, setTempo] = useState({selectedTempo: 0, newTempo: 0});
+
   const [trackDetail, setTrackDetail] = useState(null);
 
   useEffect(() => {
@@ -153,10 +157,40 @@ function App() {
 
   }
 
+  const handleChange3 = (event, newValue) => {
+    event.preventDefault();
+
+    setAcoustic({
+      selectedAcoustic: acoustic.selectedAcoustic,
+      newAcoustic: newValue
+    })
+
+  }
+
+  const handleChange4 = (event, newValue) => {
+    event.preventDefault();
+
+    setDanceable({
+      selectedDanceable: danceable.selectedDanceable,
+      newDanceable: newValue
+    })
+
+  }
+
+  const handleChange5 = (event, newValue) => {
+    event.preventDefault();
+
+    setTempo({
+      selectedTempo: tempo.selectedTempo,
+      newTempo: newValue
+    })
+
+  }
+
   const buttonTwoClicked = e => {
     e.preventDefault();
 
-    axios(`https://api.spotify.com/v1/recommendations?market=US&target_danceability=0.5&target_tempo=100&seed_genres=${seedgenres.selectedSeedGenre}&target_acousticness=0.5&target_energy=${minenergy.newMinEnergy}&target_popularity=${minpopularity.newMinPopularity}`, {
+    axios(`https://api.spotify.com/v1/recommendations?market=US&target_danceability=${danceable.newDanceable}&target_tempo=${tempo.newTempo}&seed_genres=${seedgenres.selectedSeedGenre}&target_acousticness=${acoustic.newAcoustic}&target_energy=${minenergy.newMinEnergy}&target_popularity=${minpopularity.newMinPopularity}`, {
     method: 'GET',
       headers: {
         'Authorization' : 'Bearer ' + token
