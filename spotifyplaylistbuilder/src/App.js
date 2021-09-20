@@ -15,6 +15,7 @@ import { Typography, Grid } from '@mui/material';
 import Detail2 from "./Detail2"
 import Detail3 from "./Detail3"
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 //get list of songs from a playlist (50 songs), filter using the user's requirements, 
 //then output the first 10 songs, allow refresh which takes the next ten
@@ -120,7 +121,7 @@ function App() {
   const buttonClicked = e => {
     e.preventDefault();
 
-    axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?market=US&limit=10`, {
+    axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?market=US`, {
       method: 'GET',
       headers: {
         'Authorization' : 'Bearer ' + token
@@ -129,7 +130,7 @@ function App() {
     .then(tracksResponse => {
       setTracks({
         selectedTrack: tracks.selectedTrack,
-        listOfTracksFromAPI: tracksResponse.data.items
+        listOfTracksFromAPI: tracksResponse.data.items.slice(0, 10)
       })
     });
   }
@@ -141,6 +142,104 @@ function App() {
       selectedMinEnergy: minenergy.selectedMinEnergy,
       newMinEnergy: newValue
     })
+
+    getEnergy();
+    
+
+  }
+
+  const getEnergy = (Value, Stat) => {
+    if(Value < 0.4){
+      return(
+
+      <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+                    Low {Stat}
+                </Typography> 
+    
+      )}
+    if(0.4 <= Value && Value <= 0.7){
+      return(
+        <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+                    Medium {Stat}
+                </Typography> 
+      )}
+    if(Value > 0.7){
+      return(
+        <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+                    High {Stat}
+                </Typography> 
+      )}
+
+    else{
+      return(
+      <p></p>
+      )}
+
+  }
+
+  const getPopularity = () => {
+    if(minpopularity.newMinPopularity < 40){
+      return(
+        <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+        Low Popularity
+    </Typography> 
+    
+      )}
+    if(40 <= minpopularity.newMinPopularity && minpopularity.newMinPopularity <= 70){
+      return(
+        <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+        Medium Popularity
+    </Typography> 
+      )}
+    if(minpopularity.newMinPopularity > 70){
+      return(
+        <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+        High Popularity
+    </Typography> 
+      )}
+
+    else{
+      return(
+      <p></p>
+      )}
+
+  }
+
+  const getBPM = () => {
+    if(50 <= tempo.newTempo && tempo.newTempo <= 80){
+      return(
+        <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+        Low Speed
+    </Typography> 
+    
+      )}
+    if(90 <= tempo.newTempo && tempo.newTempo <= 130){
+      return(
+
+        <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+        Medium Speed
+    </Typography> 
+      )}
+    if(140 <= tempo.newTempo && tempo.newTempo <= 180){
+      return(
+
+        <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+        High Speed
+    </Typography> 
+      )}
+
+    if(190 <= tempo.newTempo && tempo.newTempo <= 200){
+      return(
+
+        <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
+        Very High Speed
+    </Typography> 
+      )}
+
+    else{
+      return(
+      <p></p>
+      )}
 
   }
 
@@ -204,15 +303,19 @@ function App() {
 
   const refreshTracks = () => {
 
-    const finalArray = tracks.listOfTracksFromAPI.sort(() => Math.random() - Math.random()).slice(0, 10);
-
-
-    setTracks({
-      selectedTrack: tracks.selectedTrack,
-      listOfTracksFromAPI: finalArray
-    }) 
-    console.log(finalArray)
-
+    
+    axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?market=US`, {
+      method: 'GET',
+      headers: {
+        'Authorization' : 'Bearer ' + token
+      }
+    })
+    .then(tracksResponse => {
+      setTracks({
+        selectedTrack: tracks.selectedTrack,
+        listOfTracksFromAPI: tracksResponse.data.items.sort(() => Math.random() - Math.random()).slice(0, 10)
+      })
+    });
 
   }
 
@@ -288,8 +391,7 @@ function App() {
               color="primary"
               valueLabelDisplay="on"
             />
-
-
+<p>{getEnergy(minenergy.newMinEnergy, "Energy")}</p>
 <br></br>
 <br></br>
 <br></br>
@@ -308,7 +410,7 @@ function App() {
               color="primary"
               valueLabelDisplay="on"
             />
-
+<p>{getPopularity()}</p>
 <br></br>
 <br></br>
 <br></br>
@@ -327,7 +429,7 @@ function App() {
               color="primary"
               valueLabelDisplay="on"
             />
-
+<p>{getEnergy(acoustic.newAcoustic, "Acousticness")}</p>
 <br></br>
 <br></br>
 <br></br>
@@ -347,7 +449,7 @@ function App() {
               color="primary"
               valueLabelDisplay="on"
             />
-
+<p>{getEnergy(danceable.newDanceable, "Danceability")}</p>
 <br></br>
 <br></br>
 <br></br>
@@ -367,7 +469,7 @@ function App() {
               color="primary"
               valueLabelDisplay="on"
             />
-
+<p>{getBPM()}</p>
 <br></br>
 <br></br>
 <br></br>
@@ -392,7 +494,19 @@ function App() {
           <br></br>
 <br></br>
 <br></br>
-            
+            <form>
+
+            <TextField id="outlined-basic" label="Enter Playlist Name" variant="outlined" />
+
+
+            <Button  variant="contained" type='submit'>
+              Send To Spotify
+            </Button>
+
+
+
+
+            </form>
                  
       
     

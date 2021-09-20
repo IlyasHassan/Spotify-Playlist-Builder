@@ -224,3 +224,9 @@ img {
 
 
 }
+
+
+p{
+  justify-content: center;
+  font-weight: bold;
+}
