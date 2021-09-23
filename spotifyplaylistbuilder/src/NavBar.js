@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { palette } from '@mui/system';
+import { Link } from 'react-router-dom'
 
 export default function ButtonAppBar() {
   return (
@@ -25,7 +26,7 @@ export default function ButtonAppBar() {
           <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
           Hot Tracks 4U
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Link to="/" className="brand-logo" id="navtitle">Log In</Link>
         </Toolbar>
       </AppBar>
     </Box>
