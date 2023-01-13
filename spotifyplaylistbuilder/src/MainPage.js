@@ -17,17 +17,17 @@ import Detail3 from "./Detail3"
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-//get list of songs from a playlist (50 songs), filter using the user's requirements, 
+//get list of songs from a playlist (50 songs), filter using the user's requirements,
 //then output the first 10 songs, allow refresh which takes the next ten
 
 function MainPage() {
 
-  const spotify = Credentials();  
+  const spotify = Credentials();
 
   console.log('RENDERING APP.JS');
 
 
-  const [token, setToken] = useState('');  
+  const [token, setToken] = useState('');
   const [genres, setGenres] = useState({selectedGenre: '', listOfGenresFromAPI: []});
   const [playlist, setPlaylist] = useState({selectedPlaylist: '', listOfPlaylistFromAPI: []});
   const [tracks, setTracks] = useState({selectedTrack: '', listOfTracksFromAPI: []});
@@ -51,7 +51,7 @@ function MainPage() {
       accumulater[key] = value;
       return accumulater;
     }, {});
-  
+
     return paramsSplitUp;
   };
 
@@ -60,76 +60,84 @@ function MainPage() {
     if (window.location.hash) {
         const { access_token, expires_in, token_type } =
           getReturnedParamsFromSpotifyAuth(window.location.hash);
-  
+
         localStorage.clear();
-  
+
         localStorage.setItem("accessToken", access_token);
         localStorage.setItem("tokenType", token_type);
         localStorage.setItem("expiresIn", expires_in);
       }
 
-    
+
       /*
     axios('https://accounts.spotify.com/api/token', {
       headers: {
         'Content-Type' : 'application/x-www-form-urlencoded',
-        'Authorization' : 'Basic ' + btoa(spotify.ClientId + ':' + spotify.ClientSecret)      
+        'Authorization' : 'Basic ' + btoa(spotify.ClientId + ':' + spotify.ClientSecret)
       },
       data: 'grant_type=client_credentials',
       method: 'POST'
     })
-    .then(tokenResponse => {      
+    .then(tokenResponse => {
       setToken(tokenResponse.data.access_token);
 */
-      axios('https://api.spotify.com/v1/browse/categories?country=US', {
+      axios('https://api.spotify.com/v1/browse/categories', {
         method: 'GET',
         headers: { 'Authorization' : 'Bearer ' + localStorage.getItem("accessToken")}
       })
-      .then (genreResponse => {        
+      .then (genreResponse => {
         setGenres({
           selectedGenre: genres.selectedGenre,
           listOfGenresFromAPI: genreResponse.data.categories.items
         })
       })
 
-      axios('https://api.spotify.com/v1/recommendations/available-genre-seeds?country=US', {
+        console.log("listofgenres");
+        console.log(genres.listOfGenresFromAPI);
+
+
+
+      axios('https://api.spotify.com/v1/recommendations/available-genre-seeds?', {
         method: 'GET',
         headers: { 'Authorization' : 'Bearer ' + localStorage.getItem("accessToken")}
       })
-      .then (seedgenreResponse => {        
+      .then (seedgenreResponse => {
         setSeedGenres({
           selectedSeedGenre: seedgenres.selectedSeedGenre,
           listOfSeedGenresFromAPI: seedgenreResponse.data.genres
         })
-      })  
+      })
     }, [genres.selectedGenre, spotify.ClientId, spotify.ClientSecret]);
 
 
-  
+
 
   const genreChanged = val => {
     setGenres({
-      selectedGenre: val, 
+      selectedGenre: val,
       listOfGenresFromAPI: genres.listOfGenresFromAPI
     });
 
-    axios(`https://api.spotify.com/v1/browse/categories/${val}/playlists?market=US?limit=10`, {
-      method: 'GET',
-      headers: { 'Authorization' : 'Bearer ' + localStorage.getItem("accessToken")}
-    })
-    .then(playlistResponse => {
-      setPlaylist({
-        selectedPlaylist: playlist.selectedPlaylist,
-        listOfPlaylistFromAPI: playlistResponse.data.playlists.items
-      })
-    });
+    axios(`https://api.spotify.com/v1/browse/categories/${val}/playlists?limit=10`, {
+          method: 'GET',
+          headers: { 'Authorization' : 'Bearer ' + localStorage.getItem("accessToken")}
+        })
+          .then(playlistResponse => {
+            setPlaylist({
+              selectedPlaylist: playlist.selectedPlaylist,
+              listOfPlaylistFromAPI: playlistResponse.data.playlists.items
+            })
+          });
 
-    console.log(val);
+    console.log("listofplaylists");
+    console.log(playlist.listOfPlaylistFromAPI);
+
+
   }
 
   const seedGenreChanged = val => {
     setSeedGenres({
-      selectedSeedGenre: val, 
+      selectedSeedGenre: val,
       listOfSeedGenresFromAPI: seedgenres.listOfSeedGenresFromAPI
     });
 
@@ -171,7 +179,7 @@ function MainPage() {
     })
 
     getEnergy();
-    
+
 
   }
 
@@ -181,20 +189,20 @@ function MainPage() {
 
       <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
                     Low {Stat}
-                </Typography> 
-    
+                </Typography>
+
       )}
     if(0.4 <= Value && Value <= 0.7){
       return(
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
                     Medium {Stat}
-                </Typography> 
+                </Typography>
       )}
     if(Value > 0.7){
       return(
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
                     High {Stat}
-                </Typography> 
+                </Typography>
       )}
 
     else{
@@ -209,20 +217,20 @@ function MainPage() {
       return(
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
         Low Popularity
-    </Typography> 
-    
+    </Typography>
+
       )}
     if(40 <= minpopularity.newMinPopularity && minpopularity.newMinPopularity <= 70){
       return(
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
         Medium Popularity
-    </Typography> 
+    </Typography>
       )}
     if(minpopularity.newMinPopularity > 70){
       return(
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
         High Popularity
-    </Typography> 
+    </Typography>
       )}
 
     else{
@@ -239,22 +247,22 @@ function MainPage() {
       return(
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
         Low Speed
-    </Typography> 
-    
+    </Typography>
+
       )}
     if(90 <= tempo.newTempo && tempo.newTempo <= 130){
       return(
 
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
         Medium Speed
-    </Typography> 
+    </Typography>
       )}
     if(140 <= tempo.newTempo && tempo.newTempo <= 180){
       return(
 
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
         High Speed
-    </Typography> 
+    </Typography>
       )}
 
     if(190 <= tempo.newTempo && tempo.newTempo <= 200){
@@ -262,14 +270,14 @@ function MainPage() {
 
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
         Very High Speed
-    </Typography> 
+    </Typography>
       )}
 
     else{
       return(
         <Typography align='center' color='primary' variant="h7" gutterBottom component="div">
         Low Speed
-    </Typography> 
+    </Typography>
       )}
 
   }
@@ -334,7 +342,7 @@ function MainPage() {
 
   const refreshTracks = () => {
 
-    
+
     axios(`https://api.spotify.com/v1/playlists/${playlist.selectedPlaylist}/tracks?market=US`, {
       method: 'GET',
       headers: {
@@ -363,10 +371,10 @@ function MainPage() {
 
     //const uri_list = recommendations.listOfRecommendationsFromAPI.map((item) => item[0].uri);
 
-         
 
 
-    
+
+
 
     axios(`https://api.spotify.com/v1/users/224kggdxqcgsjbw7lyxjd4pty/playlists`, {
       headers: {
@@ -412,15 +420,15 @@ function MainPage() {
 <br></br>
     <Typography align='center' variant="h2" gutterBottom component="div" >
                     Tracks From Curated Spotify Playlists
-                </Typography> 
+                </Typography>
 
 
-      <form onSubmit={buttonClicked}>   
-      <br></br>     
+      <form onSubmit={buttonClicked}>
+      <br></br>
           <Dropdown label="Genre :&nbsp;" options={genres.listOfGenresFromAPI} selectedValue={genres.selectedGenre} changed={genreChanged} />
           <br></br>
           <Dropdown label="Playlist :&nbsp;" options={playlist.listOfPlaylistFromAPI} selectedValue={playlist.selectedPlaylist} changed={playlistChanged} />
-          
+
           <br></br>
           <div id="centerItem" className="col-sm-6 row form-group px-0">
             <Button variant="contained" type='submit'>
@@ -440,7 +448,7 @@ function MainPage() {
               <Detail2 items={tracks.listOfTracksFromAPI}></Detail2>
             </Grid>
           </Grid>
-      
+
           </form>
           <br></br>
           <br></br>
@@ -451,7 +459,7 @@ function MainPage() {
 
           <Typography align='center' variant="h2" gutterBottom component="div" >
                     Recommended Tracks Based on Your Favorite Genres and Other Stats
-                </Typography> 
+                </Typography>
                 <br></br>
 <br></br>
 <br></br>
@@ -462,7 +470,7 @@ function MainPage() {
           <br></br>
           <Typography align='center' variant="h4" gutterBottom component="div" >
                     Energy
-                </Typography> 
+                </Typography>
 
             <Slider
               className="sliderDet"
@@ -481,7 +489,7 @@ function MainPage() {
 
             <Typography align='center' variant="h4" gutterBottom component="div">
                     Popularity
-                </Typography> 
+                </Typography>
 
             <Slider
               className="sliderDet"
@@ -500,7 +508,7 @@ function MainPage() {
 
             <Typography align='center' variant="h4" gutterBottom component="div">
                     Acousticness
-                </Typography> 
+                </Typography>
 
             <Slider
               className="sliderDet"
@@ -519,7 +527,7 @@ function MainPage() {
 
             <Typography align='center' variant="h4" gutterBottom component="div">
                     Danceability
-                </Typography> 
+                </Typography>
 
 
             <Slider
@@ -539,7 +547,7 @@ function MainPage() {
 
             <Typography align='center' variant="h4" gutterBottom component="div">
                     Tempo
-                </Typography>  
+                </Typography>
 
             <Slider
               className="sliderDet"
@@ -579,11 +587,11 @@ function MainPage() {
 <br></br>
             <form onSubmit={createPlaylist}>
 
-            <TextField 
+            <TextField
             label="Enter Playlist Name"
             variant="outlined"
-            input='text' 
-            value={playlistName} 
+            input='text'
+            value={playlistName}
             onChange={(e) => setPlaylistName(e.target.value)} />
 
 
@@ -595,9 +603,9 @@ function MainPage() {
 
 
             </form>
-                 
-      
-    
+
+
+
     </Container>
     </div>
   );
